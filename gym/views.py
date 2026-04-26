@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 
 def home(request):
-    return JsonResponse({"ok": True})
+    return JsonResponse({"ok": True},)
 
 class UserView(APIView):
     def get(self, request):
@@ -24,7 +24,7 @@ class UserView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
           else:
               return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
-
+    
 class UserDetail(APIView):
     def get(self,request,id):
         try:
@@ -38,9 +38,22 @@ class UserDetail(APIView):
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
     
-    def put(self,request):
-         pass
-    def delete(self,request):
-         pass
+    def put(self,request,id):
+        user = User.objects.get(pk=id)
+        serializer = UserSerializer(user,data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return JsonResponse({"Message":"User not found"},status=status.HTTP_404_NOT_FOUND)
+        
+    def delete(self,request,id):
+        user = User.objects.get(pk=id)
+        if user:
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
      
      
