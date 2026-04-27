@@ -1,7 +1,7 @@
 from django.urls import path
 from django.http import JsonResponse
 from django.contrib import admin
-from gym import views
+from skate import views
 from .views import UserView,UserDetail
 
 urlpatterns = [

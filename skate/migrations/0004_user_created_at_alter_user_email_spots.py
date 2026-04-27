@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gym', '0003_rename_userview_user'),
+        ('skate', '0003_rename_userview_user'),
     ]
 
     operations = [
@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('name_spot', models.CharField(max_length=30)),
                 ('body', models.TextField(max_length=200, null=True)),
                 ('created_at', models.TimeField(auto_now_add=True, null=True)),
-                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gym.user')),
+                ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='skate.user')),
             ],
         ),
     ]
