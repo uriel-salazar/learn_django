@@ -1,10 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class User(models.Model):
-    
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     age = models.IntegerField()
-    email = models.EmailField(max_length=200,unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

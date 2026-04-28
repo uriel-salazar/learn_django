@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import User,Spots
+from .models import User,Spots,Profile
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -30,11 +30,10 @@ class UserView(APIView):
 class UserDetail(APIView):
     def get(self,request,id):
         try:
-            user = User.objects.get(pk=id)
+            user = Profile.objects.get(pk=id)
             data={
                 "name": user.name,
                 "age": user.age,
-                "email": user.email,
                 "created_at":user.created_at
             }
             return JsonResponse(data)
