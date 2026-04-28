@@ -30,11 +30,13 @@ class UserView(APIView):
 class UserDetail(APIView):
     def get(self,request,id):
         try:
-            user = Profile.objects.get(pk=id)
+            user = User.objects.get(pk=id)
+            profile = Profile
             data={
-                "name": user.name,
-                "age": user.age,
-                "created_at":user.created_at
+                "username": user.username,
+                "email": user.email,
+                "age":user.age,
+                "created_at":profile.created_at
             }
             return JsonResponse(data)
         except User.DoesNotExist:
