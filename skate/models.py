@@ -1,14 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import User
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
-    age = models.IntegerField()
+from django.contrib.auth.models import AbstractUser
+class User(AbstractUser):
+    first_name = None
+    last_name = None
+    username=models.CharField(max_length=30,unique=True)
+    email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
+    
     def __str__(self):
-        return self.name
+        return self.username
 
 class Spots(models.Model):
     name_spot = models.CharField(max_length = 30)
