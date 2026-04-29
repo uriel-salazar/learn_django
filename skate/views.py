@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import User,Spots,Profile
+from .models import User,Spots
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -31,12 +31,10 @@ class UserDetail(APIView):
     def get(self,request,id):
         try:
             user = User.objects.get(pk=id)
-            profile = Profile
             data={
                 "username": user.username,
                 "email": user.email,
-                "age":user.age,
-                "created_at":profile.created_at
+                "created_at":user.created_at
             }
             return JsonResponse(data)
         except User.DoesNotExist:
