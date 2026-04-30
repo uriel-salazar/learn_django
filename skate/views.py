@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404,render
 from .models import User,Spots
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 
 def home(request):
-    return JsonResponse({"ok": True},)
+    return render(request,'basic_home.html')
 
 class UserView(APIView):
     
@@ -68,6 +68,28 @@ class SpotsView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+class SpotsDetail(APIView):
+    
+    def put(self,request,id):
+        spots = get_object_or_404(Spots,pk=id)
+        serializer = UserSerializer(spots,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self,request,id):
+        try:
+            spots = Spots.objects.get(pk=id)
+            data={
+                "name_spot": spots.name_spot,
+                "body": spots.body
+            }
+            return JsonResponse(data)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
     
    
