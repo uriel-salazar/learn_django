@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404,render
 from .models import User,Spots
-from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import UserSerializer,SpotSerializer
@@ -12,6 +12,7 @@ def home(request):
     return render(request,'basic_home.html')
 
 class UserView(APIView):
+    
     
     def get(self, request):
     
@@ -28,6 +29,7 @@ class UserView(APIView):
               return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
 class UserDetail(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self,request,id):
         try:
             user = User.objects.get(pk=id)
@@ -55,6 +57,8 @@ class UserDetail(APIView):
     
     
 class SpotsView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self,request):
         spots = Spots.objects.all()
         serializer = UserSerializer(spots, many=True)
@@ -72,6 +76,7 @@ class SpotsView(APIView):
     
 
 class SpotsDetail(APIView):
+    permission_classes = [IsAuthenticated]
     
     def put(self,request,id):
         spots = get_object_or_404(Spots,pk=id)
