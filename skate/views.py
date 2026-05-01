@@ -62,6 +62,7 @@ class SpotsView(APIView):
     
    
     def post(self,request):
+        
         serializer = SpotSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
