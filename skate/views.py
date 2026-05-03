@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from rest_framework.viewsets import ModelViewSet
 from django.shortcuts import get_object_or_404,render
 from .models import User,Spots
 from rest_framework.permissions import IsAuthenticated
@@ -11,6 +12,13 @@ from rest_framework.views import APIView
 def home(request):
     return render(request,'basic_home.html')
 
+
+
+class UserViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
 class UserView(APIView):
     
     
