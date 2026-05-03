@@ -15,8 +15,9 @@ def home(request):
 
 
 class UserViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
-    serializer_class = UserSerializer()
+    serializer_class = UserSerializer
     
 class UserView(APIView):
     
