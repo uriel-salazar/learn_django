@@ -13,7 +13,6 @@ def home(request):
     return render(request,'basic_home.html')
 
 
-
 class UserViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
@@ -67,7 +66,19 @@ class UserDetail(APIView):
 class SpotsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self,request):
+    def get(self,request,id=None):
+        if id: # get user by id :
+            try:
+                spots = Spots.objects.get(pk=id)
+                data={
+                "name_spot": spots.name_spot,
+                "body": spots.body
+                }
+                return JsonResponse(data)
+            except User.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            
+        # To get a list of users 
         spots = Spots.objects.all()
         serializer = UserSerializer(spots, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -81,11 +92,7 @@ class SpotsView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
-
-class SpotsDetail(APIView):
-    permission_classes = [IsAuthenticated]
-    
+        
     def put(self,request,id):
         spots = get_object_or_404(Spots,pk=id)
         serializer = UserSerializer(spots,data=request.data)
@@ -93,17 +100,6 @@ class SpotsDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    def get(self,request,id):
-        try:
-            spots = Spots.objects.get(pk=id)
-            data={
-                "name_spot": spots.name_spot,
-                "body": spots.body
-            }
-            return JsonResponse(data)
-        except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
         
     
    
