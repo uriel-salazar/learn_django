@@ -80,7 +80,7 @@ class SpotsView(APIView):
             
         # To get a list of users 
         spots = Spots.objects.all()
-        serializer = UserSerializer(spots, many=True)
+        serializer = SpotSerializer(spots, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
    
@@ -88,7 +88,8 @@ class SpotsView(APIView):
         
         serializer = SpotSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+
+            serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

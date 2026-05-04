@@ -22,6 +22,6 @@ class SpotSerializer(serializers.ModelSerializer):
     class Meta:
         model=Spots
         fields = ['id', 'name_spot', 'body', 'created_at']
-        read_only_fields=['id','created_at']
+        read_only_fields=['id','created_at','user']
         
         
