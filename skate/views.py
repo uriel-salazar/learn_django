@@ -13,63 +13,30 @@ def home(request):
     return render(request,'basic_home.html')
 
 
-
 class UserViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
-class UserView(APIView):
-    
-    
-    def get(self, request):
-    
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-     
-    def post(self,request):
-          serializer = UserSerializer(data=request.data)
-          if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-          else:
-              return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
-class UserDetail(APIView):
-    permission_classes = [IsAuthenticated]
-    def get(self,request,id):
-        try:
-            user = User.objects.get(pk=id)
-            data={
-                "username": user.username,
-                "email": user.email,
-                "created_at":user.created_at
-            }
-            return JsonResponse(data)
-        except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    def put(self,request,id):
-        user = get_object_or_404(User,pk=id)
-        serializer = UserSerializer(user,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(status=status.HTTP_404_NOT_FOUND)
-        
-    def delete(self,request,id):
-        user = get_object_or_404(User,pk=id)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
-    
+ 
 class SpotsView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self,request):
+    def get(self,request,id=None):
+        if id: # get user by id :
+            try:
+                spots = Spots.objects.get(pk=id)
+                data={
+                "name_spot": spots.name_spot,
+                "body": spots.body
+                }
+                return JsonResponse(data)
+            except User.DoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            
+        # To get a list of users 
         spots = Spots.objects.all()
-        serializer = UserSerializer(spots, many=True)
+        serializer = SpotSerializer(spots, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
    
@@ -77,37 +44,37 @@ class SpotsView(APIView):
         
         serializer = SpotSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+
+            serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
-
-class SpotsDetail(APIView):
-    permission_classes = [IsAuthenticated]
-    
+        
     def put(self,request,id):
         spots = get_object_or_404(Spots,pk=id)
-        serializer = UserSerializer(spots,data=request.data)
+        serializer = SpotSerializer(spots,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
-    def get(self,request,id):
+    
+    def delete(self, request, id):
+        """
+        Deletes a spot, and if the spot isn't founded, it raises a 404 status code
+        with a descriptive message. 
+        """
         try:
-            spots = Spots.objects.get(pk=id)
-            data={
-                "name_spot": spots.name_spot,
-                "body": spots.body
-            }
-            return JsonResponse(data)
-        except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        
-    
+            spot = Spots.objects.get(pk=id)
+        except Spots.DoesNotExist:
+                return Response({"error": " Not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        spot.delete()
+        return Response({"message": "Deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
    
-        
+
+class Ranking(APIView):
+    pass
 
      
 
