@@ -7,12 +7,15 @@ from .views import SpotsView,home
 
 urlpatterns = [
     path('',home), # html template 
+    path('admin/', admin.site.urls),
+    # get token and refresh paths 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/spots/',SpotsView.as_view()),
     path('api/spots/<int:id>/',SpotsView.as_view()),
-    path('admin/', admin.site.urls),
-    path('api/',include(router.urls))
+    # path from router 
+    path('api/',include(router.urls)),
+     
 ]
 
 
