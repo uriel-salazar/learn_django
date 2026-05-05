@@ -17,6 +17,11 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])  
         user.save()
         return user
+    # An username has to have at least 5 words 
+    def validate_username(self, username):
+        if len(username.split()) < 5:
+            raise serializers.ValidationError(f"'{username}' must have at least 5 words.")
+        return username
     
 class SpotSerializer(serializers.ModelSerializer):
     class Meta:
