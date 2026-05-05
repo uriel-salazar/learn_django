@@ -1,6 +1,22 @@
 from rest_framework import serializers
 from .models import User,Spots
 from django.forms import forms
+from PIL import Image
+from io import BytesIO
+
+
+
+def image_resize_800(file):
+
+    with file.open('rb') as f:
+            image_bytes = f.read()
+    image_bytes = Image.open(BytesIO(image_bytes))
+    
+    i = image_bytes.resize((800, 800))
+    output = BytesIO()
+    i.save(output, format=i.format or "JPEG")
+    output.seek(0)
+    return output
 
 class UserSerializer(serializers.ModelSerializer):
     password=serializers.CharField(write_only=True)
@@ -28,6 +44,19 @@ class SpotSerializer(serializers.ModelSerializer):
         model=Spots
         fields = ['id', 'name_spot','image_url','body', 'created_at']
         read_only_fields=['id','created_at','user']
-    
+        
+    def create(self,validated_data):
+        instance = super().create(validated_data)
+        if instance.image_url:
+            resized_image=image_resize_800(instance.image_url)
+        #Saves resized image 
+            instance.image_url.save(
+            instance.image_url.name,
+            resized_image,
+            save=True
+            )
+        return instance
+            
+            
 
         
