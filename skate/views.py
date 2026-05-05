@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404,render
 from .models import User,Spots
 from rest_framework.permissions import IsAuthenticated
@@ -21,6 +22,7 @@ class UserViewSet(ModelViewSet):
  
 class SpotsView(APIView):
     permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
 
     def get(self,request,id=None):
         if id: # get user by id :
