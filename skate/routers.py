@@ -4,4 +4,3 @@ router = DefaultRouter()
 
 router.register(r'users', UserViewSet)
 
-

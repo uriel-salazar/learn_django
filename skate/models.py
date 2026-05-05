@@ -13,8 +13,8 @@ class User(AbstractUser):
         return self.username
 
 class Spots(models.Model):
-    name_spot = models.CharField(max_length = 30)
-    body = models.TextField( null= True)
+    name_spot = models.CharField(max_length = 200)
+    body = models.TextField( null= True,max_length=1000)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     
