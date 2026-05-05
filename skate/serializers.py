@@ -8,13 +8,13 @@ from io import BytesIO
 
 def image_resize_800(file):
 
-    with file.open('rb') as f:
-            image_bytes = f.read()
-    image_bytes = Image.open(BytesIO(image_bytes))
+
+    image = Image.open(file)
+            
+    image.thumbnail((800, 800))
     
-    i = image_bytes.resize((800, 800))
     output = BytesIO()
-    i.save(output, format=i.format or "JPEG")
+    image.save(output, format=image.format or "JPEG",quality=85)
     output.seek(0)
     return output
 
