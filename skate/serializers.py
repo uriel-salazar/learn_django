@@ -4,6 +4,7 @@ from django.forms import forms
 from PIL import Image
 from django.core.files.base import ContentFile
 from io import BytesIO
+from django.core.files.base import ContentFile
 
 
 
@@ -55,10 +56,11 @@ class SpotSerializer(serializers.ModelSerializer):
     
             instance.image_url.delete(save=False) # Deletes original image 
             instance.image_url.save(
-            original_name,  # using original url name 
-            ContentFile(resized_image.getvalue()),# Extract values from BytesIO
+            instance.image_url.name,  # any name works
+            ContentFile(resized_image.getvalue()), # Extract values from BytesIO
             save=True
-            )
+        )
+
         return instance
             
             
