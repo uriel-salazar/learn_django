@@ -48,12 +48,15 @@ class SpotSerializer(serializers.ModelSerializer):
         
     def create(self,validated_data):
         instance = super().create(validated_data)
+        original_name = instance.image_url.name
         if instance.image_url:
+            #function that resizes the image 
             resized_image=image_resize_800(instance.image_url)
-        #Saves resized image 
+    
+            instance.image_url.delete(save=False) # Deletes original image 
             instance.image_url.save(
-            instance.image_url.name,  # any name works
-            ContentFile(resized_image.getvalue()), # Extract values from BytesIO
+            original_name,  # using original url name 
+            ContentFile(resized_image.getvalue()),# Extract values from BytesIO
             save=True
         )
 
