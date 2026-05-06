@@ -3,6 +3,7 @@ from .models import User,Spots
 from django.forms import forms
 from PIL import Image
 from io import BytesIO
+from django.core.files.base import ContentFile
 
 
 
@@ -51,10 +52,11 @@ class SpotSerializer(serializers.ModelSerializer):
             resized_image=image_resize_800(instance.image_url)
         #Saves resized image 
             instance.image_url.save(
-            instance.image_url.name,
-            resized_image,
+            instance.image_url.name,  # any name works
+            ContentFile(resized_image.getvalue()), # Extract values from BytesIO
             save=True
-            )
+        )
+
         return instance
             
             
