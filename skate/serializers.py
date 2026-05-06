@@ -42,11 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
 class SpotSerializer(serializers.ModelSerializer):
     class Meta:
         model=Spots
-<<<<<<< HEAD
-        fields = ['id', 'name_spot', 'body', 'created_at']
-=======
         fields = ['id', 'name_spot','image_url','body', 'created_at']
->>>>>>> work
         read_only_fields=['id','created_at','user']
         
     def create(self,validated_data):

@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('skate', '0008_alter_spots_created_at'),
+        ('skate', '0004_alter_spots_image_url'),
     ]
 
     operations = [
