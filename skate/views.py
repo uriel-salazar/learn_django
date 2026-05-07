@@ -2,9 +2,9 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import render
-from .models import User,Spots,Rating
+from .models import User,Spots
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UserSerializer,SpotSerializer,RatingSerializer
+from .serializers import UserSerializer,SpotSerializer
 from rest_framework.views import APIView
 
 
@@ -27,15 +27,8 @@ class SpotsViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
     
-class RatingViewSet(ModelViewSet):
-    
-    serializer_class = RatingSerializer
-    queryset = Rating.objects.all()
-    permission_classes = [IsAuthenticated]
-    
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-    
+class Ranking(APIView):
+    pass
 
      
 
