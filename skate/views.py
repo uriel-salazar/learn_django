@@ -28,9 +28,13 @@ class SpotsViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
     
 class RatingViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    queryset = Rating.objects.all()
+    
     serializer_class = RatingSerializer
+    queryset = Rating.objects.all()
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
     
 
      
