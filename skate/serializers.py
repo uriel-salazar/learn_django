@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Spots
+from .models import User,Spots,Rating
 from django.forms import forms
 from PIL import Image
 from django.core.files.base import ContentFile
@@ -62,5 +62,9 @@ class SpotSerializer(serializers.ModelSerializer):
         return instance
             
             
-
-        
+class RatingSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Rating
+            fields = "__all__"
+            read_only_fields=['id','created_at','user_id','spot_id']
+    
