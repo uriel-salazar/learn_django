@@ -69,24 +69,5 @@ class RatingSerializer(serializers.ModelSerializer):
         class Meta:
             model = Rating
             fields = "__all__"
-            read_only_fields=['id','created_at','user']
-            
+            read_only_fields=['id','created_at','user_id','spot_id']
     
-        def validate(self, data): # type: ignore  (ignore pylance error )
-            """If rating for spot already exists with the actual user,
-            it handles that status code error with a clear message"""
-            
-            user = self.context['request'].user
-            spot = data['spot']
-
-            spot_exists = Rating.objects.filter(
-            user=user,
-            spot=spot
-            ).exists()
-            
-            if spot_exists:
-                raise serializers.ValidationError(
-                "You already rated this spot."
-            )
-
-            return data

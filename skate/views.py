@@ -5,7 +5,8 @@ from django.shortcuts import render
 from .models import User,Spots,Rating
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer,SpotSerializer,RatingSerializer
-from rest_framework.views import APIView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from rest_framework.pagination import LimitOffsetPagination
 
 
 def home(request):
@@ -14,12 +15,14 @@ def home(request):
 
 class UserViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
+    pagination_class = LimitOffsetPagination
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
 class SpotsViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset= Spots.objects.all()
+    pagination_class = LimitOffsetPagination
     parser_classes = (MultiPartParser, FormParser)
     serializer_class= SpotSerializer
     
@@ -31,6 +34,7 @@ class RatingViewSet(ModelViewSet):
     
     serializer_class = RatingSerializer
     queryset = Rating.objects.all()
+    pagination_class = LimitOffsetPagination
     permission_classes = [IsAuthenticated]
     
     def perform_create(self, serializer):
