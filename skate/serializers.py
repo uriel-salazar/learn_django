@@ -50,6 +50,7 @@ class SpotSerializer(serializers.ModelSerializer):
     def create(self,validated_data):
         instance = super().create(validated_data)
         original_name = instance.image_url.name
+        
         if instance.image_url:
             #function that resizes the image 
             resized_image=image_resize_800(instance.image_url)
@@ -70,3 +71,22 @@ class RatingSerializer(serializers.ModelSerializer):
             fields = "__all__"
             read_only_fields=['id','created_at','user']
             
+    
+        def validate(self, data): # type: ignore  (ignore pylance error )
+            """If rating for spot already exists with the actual user,
+            it handles that status code error with a clear message"""
+            
+            user = self.context['request'].user
+            spot = data['spot']
+
+            spot_exists = Rating.objects.filter(
+            user=user,
+            spot=spot
+            ).exists()
+            
+            if spot_exists:
+                raise serializers.ValidationError(
+                "You already rated this spot."
+            )
+
+            return data
