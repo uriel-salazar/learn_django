@@ -63,38 +63,10 @@ class SpotSerializer(serializers.ModelSerializer):
 
         return instance
             
-
-class Nested_User_Serializer(serializers.ModelSerializer):
-    """ To return a nested field with id and username """
-    class Meta:
-            model = User
-            fields = ['id','username']
-      
+            
 class RatingSerializer(serializers.ModelSerializer):
-    user = Nested_User_Serializer(read_only=True)
-    class Meta:
+        class Meta:
             model = Rating
-            fields = ['id','created_at','user','spot','score']
-  
-    
-    def validate(self, data):  # type: ignore  (ignore pylance error )
-            """If rating for spot already exists with the actual user,
-            it handles that status code error with a clear message"""
-            
-            user = self.context['request'].user
-            spot = data['spot']
-
-            spot_exists = Rating.objects.filter(
-            user=user,
-            spot=spot
-            ).exists()
-            
-            if spot_exists:
-                raise serializers.ValidationError(
-                "You already rated this spot."
-            )
-
-            return data
-        
-
+            fields = "__all__"
+            read_only_fields=['id','created_at','user_id','spot_id']
     
