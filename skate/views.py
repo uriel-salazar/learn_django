@@ -5,7 +5,8 @@ from django.shortcuts import render
 from .models import User,Spots,Rating
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer,SpotSerializer,RatingSerializer
-from rest_framework.views import APIView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .pagination import CostumPagination
 
 
 def home(request):
