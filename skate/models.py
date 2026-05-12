@@ -22,6 +22,7 @@ class Spots(models.Model):
     def __str__(self):
         return self.name_spot
     
+
 class Rating(models.Model):
     score = models.DecimalField(max_digits=4,decimal_places=2)
     
@@ -36,7 +37,12 @@ class Rating(models.Model):
                 name='unique_user_spot_rating'
             )
         ]
+        
 
     def __str__(self):
         return f"{self.user} rated {self.spot} - {self.score}"
+    
+    
+   
+
     
