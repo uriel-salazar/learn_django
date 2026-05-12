@@ -33,6 +33,7 @@ class SpotsViewSet(ModelViewSet):
 class RatingViewSet(ModelViewSet):
     
     serializer_class = RatingSerializer
+    mini_serializer_class= RatingSerializer
     queryset = Rating.objects.all()
     pagination_class = LimitOffsetPagination
     permission_classes = [IsAuthenticated]

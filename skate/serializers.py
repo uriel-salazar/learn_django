@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import User,Spots,Rating
-from django.forms import forms
+from decimal import Decimal
 from PIL import Image
 from django.core.files.base import ContentFile
 from io import BytesIO
@@ -57,8 +57,8 @@ class SpotSerializer(serializers.ModelSerializer):
     
             instance.image_url.delete(save=False) # Deletes original image 
             instance.image_url.save(
-            instance.image_url.name,  # any name works
-            ContentFile(resized_image.getvalue()), # Extract values from BytesIO
+            original_name,  # using original url name 
+            ContentFile(resized_image.getvalue()),# Extract values from BytesIO
             save=True
         )
 
@@ -66,8 +66,16 @@ class SpotSerializer(serializers.ModelSerializer):
             
             
 class RatingSerializer(serializers.ModelSerializer):
+        # We use a serializer method field to use the method get_<field_name>
+        score = serializers.SerializerMethodField()
         class Meta:
             model = Rating
             fields = "__all__"
             read_only_fields=['id','created_at','user_id','spot_id']
+        
+        # Return it as decimal 
+        def get_score(self,column):
+            return Decimal(column.score)
+            
+        
     
