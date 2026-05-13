@@ -1,11 +1,10 @@
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser, FormParser
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from .models import User,Spots,Rating
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer,SpotSerializer,RatingSerializer
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework.pagination import LimitOffsetPagination
 
 
@@ -39,11 +38,15 @@ class RatingViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-        
-    
-    
+        spot = get_object_or_404(
+                Spots,
+                pk=self.kwargs['spots_id']
+            )
 
-     
+        serializer.save(
+                user=self.request.user,
+                spot=spot
+            )
+
 
     

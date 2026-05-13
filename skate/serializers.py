@@ -67,15 +67,12 @@ class SpotSerializer(serializers.ModelSerializer):
             
 class RatingSerializer(serializers.ModelSerializer):
         # We use a serializer method field to use the method get_<field_name>
-        score = serializers.SerializerMethodField()
+
         class Meta:
             model = Rating
             fields = "__all__"
-            read_only_fields=['id','created_at','user_id','spot_id']
+            read_only_fields=['id','created_at','user','spot']
         
         # Return it as decimal 
         def get_score(self,column):
             return Decimal(column.score)
-            
-        
-    
