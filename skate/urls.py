@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .routers import router
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
-from .views import home
+from .views import home,RatingViewSet
 from drf_spectacular.views import  SpectacularAPIView,SpectacularSwaggerView
 
 
@@ -19,6 +19,7 @@ urlpatterns = [
  #   path('api/spots/<int:id>/',SpotsViewSet.as_view()),
     # path from router 
     path('api/',include(router.urls)),
+    path('api/spots/<int:spots_id>/rating/',RatingViewSet.as_view({"post":"create"})),
     # donwload schema
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # swagger ui to check endpoints 
