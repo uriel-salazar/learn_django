@@ -15,3 +15,4 @@ const response = await fetch(`${host}/api/users/`,{
 
 const data = await response.json()
 
+#console.log(data)
