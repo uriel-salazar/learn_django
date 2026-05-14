@@ -48,5 +48,4 @@ class RatingViewSet(ModelViewSet):
                 spot=spot
             )
 
-
     
