@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import render,get_object_or_404
 from .models import User,Spots,Rating
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .serializers import UserSerializer,SpotSerializer,RatingSerializer
 from rest_framework.pagination import LimitOffsetPagination
 
@@ -13,20 +13,28 @@ def home(request):
 
 
 class UserViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    """ User must be authenticated to get http methods like 
+    post or delete. 
+    """
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = LimitOffsetPagination
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
 class SpotsViewSet(ModelViewSet):
+    
     permission_classes = [IsAuthenticated]
+    
     queryset= Spots.objects.all()
     pagination_class = LimitOffsetPagination
     parser_classes = (MultiPartParser, FormParser)
     serializer_class= SpotSerializer
     
-  #  injects to the actual user before saving it.
+
     def perform_create(self, serializer):
+        """ Injects to current user before saving it."""
+    
         serializer.save(user=self.request.user)
     
 class RatingViewSet(ModelViewSet):
