@@ -13,21 +13,28 @@ def home(request):
 
 
 class UserViewSet(ModelViewSet):
-    # You can only read if you're not authorized 
+    """ User must be authenticated to get http methods like 
+    post or delete. 
+    """
+
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = LimitOffsetPagination
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
 class SpotsViewSet(ModelViewSet):
+    
     permission_classes = [IsAuthenticated]
+    
     queryset= Spots.objects.all()
     pagination_class = LimitOffsetPagination
     parser_classes = (MultiPartParser, FormParser)
     serializer_class= SpotSerializer
     
-  #  injects to the actual user before saving it.
+
     def perform_create(self, serializer):
+        """ Injects to current user before saving it."""
+    
         serializer.save(user=self.request.user)
     
 class RatingViewSet(ModelViewSet):
