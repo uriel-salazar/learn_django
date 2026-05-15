@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import render,get_object_or_404
 from .models import User,Spots,Rating
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .serializers import UserSerializer,SpotSerializer,RatingSerializer
 from rest_framework.pagination import LimitOffsetPagination
 
@@ -13,7 +13,8 @@ def home(request):
 
 
 class UserViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    # You can only read if you're not authorized 
+    permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = LimitOffsetPagination
     queryset = User.objects.all()
     serializer_class = UserSerializer
