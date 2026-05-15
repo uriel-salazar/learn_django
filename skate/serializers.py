@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User,Spots,Rating
 from decimal import Decimal
+from django.contrib.auth.password_validation import validate_password
 from PIL import Image
 from django.core.files.base import ContentFile
 from io import BytesIO
@@ -26,6 +27,17 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id','username','email','password','created_at']
     
+    
+    
+    def validate_password(self, value):
+        """
+        Add password validation from settings.py
+        Password requirements : 
+        It must have at least 8 words length 
+        - It doens't have to be too common 
+        """
+        validate_password(value) 
+        return value
     
     def create(self, validated_data):
         user = User(
