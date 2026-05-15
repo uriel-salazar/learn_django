@@ -10,15 +10,16 @@ from drf_spectacular.views import  SpectacularAPIView,SpectacularSwaggerView
 
 
 urlpatterns = [
-    path('',home), # html template 
+    path('',home), # html of home 
     path('admin/', admin.site.urls),
-    # get token and refresh paths 
+    # get token 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    #refresh token url 
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-   # path('api/spots/',SpotsViewSet.as_view()),
- #   path('api/spots/<int:id>/',SpotsViewSet.as_view()),
-    # path from router 
+ 
+    # paths from router 
     path('api/',include(router.urls)),
+    #path to get rating from id of spot 
     path('api/spots/<int:spots_id>/rating/',RatingViewSet.as_view({"post":"create"})),
     # donwload schema
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
