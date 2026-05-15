@@ -2,23 +2,8 @@ from rest_framework import serializers
 from .models import User,Spots,Rating
 from decimal import Decimal
 from django.contrib.auth.password_validation import validate_password
-from PIL import Image
-from io import BytesIO
+from media_api import image_logic
 from django.core.files.base import ContentFile
-
-
-
-def image_resize_800(file):
-
-
-    image = Image.open(file)
-            
-    image.thumbnail((800, 800))
-    
-    output = BytesIO()
-    image.save(output, format=image.format or "JPEG",quality=85)
-    output.seek(0)
-    return output
 
 class UserSerializer(serializers.ModelSerializer):
     password=serializers.CharField(write_only=True)
@@ -46,8 +31,18 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])  
         user.save()
         return user
-    # An username has to have at least 5 words 
+    
     def words_username(self, username):
+        """ 
+        Username must have at least 5 words 
+
+        Raises:
+            serializers.ValidationError: validation if the username is less 
+            than 5 words 
+
+        Returns:
+            username
+        """
         if len(username.split()) < 5:
             raise serializers.ValidationError(f"'{username}' must have at least 5 words.")
         return username
@@ -55,7 +50,7 @@ class SpotSerializer(serializers.ModelSerializer):
     class Meta:
         model=Spots
         fields = ['id', 'name_spot','image_url','body', 'created_at']
-        read_only_fields=['id','created_at','user']
+        read_only_fields = ['id','created_at','user']
         
     def create(self,validated_data):
         instance = super().create(validated_data)
@@ -63,7 +58,7 @@ class SpotSerializer(serializers.ModelSerializer):
         
         if instance.image_url:
             #function that resizes the image 
-            resized_image=image_resize_800(instance.image_url)
+            resized_image = image_logic.image_resize_800(instance.image_url)
     
             instance.image_url.delete(save=False) # Deletes original image 
             instance.image_url.save(
@@ -76,12 +71,10 @@ class SpotSerializer(serializers.ModelSerializer):
             
             
 class RatingSerializer(serializers.ModelSerializer):
-        # We use a serializer method field to use the method get_<field_name>
-
         class Meta:
             model = Rating
             fields = "__all__"
-            read_only_fields=['id','created_at','user','spot']
+            read_only_fields = ['id','created_at','user','spot']
         
         # Return it as decimal 
         def get_score(self,column):
