@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import User,Spots,Rating
 from decimal import Decimal
 from django.contrib.auth.password_validation import validate_password
-from media_api import image_logic
+from skate.media_api import image_logic
 from django.core.files.base import ContentFile
 
 class UserSerializer(serializers.ModelSerializer):
