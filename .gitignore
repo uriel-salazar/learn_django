@@ -3,5 +3,6 @@ settings.py
 __pycache__/
 /media
 .env
+.venv/
 node_modules/
 tempCodeRunnerFile.js
